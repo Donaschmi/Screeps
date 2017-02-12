@@ -24,8 +24,8 @@ module.exports.loop=function(){
     console.log('Room "'+name+'" has '+energy+' energy');
   }
   console.log('Number of creeps: '+numberOfCreeps);
-  var MaxNumCreeps=12;
-  var minNumHarvesters=3;
+  var MaxNumCreeps=10;
+  var minNumHarvesters=6;
   var minNumUpgraders=2;
   var minNumBuilders=2;
 
