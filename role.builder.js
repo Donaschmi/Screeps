@@ -1,3 +1,4 @@
+roleRepairer=require('role.repairer')
 var roleBuilder = {
 
     /** @param {Creep} creep **/
@@ -7,7 +8,7 @@ var roleBuilder = {
             creep.memory.building = false;
             creep.say('collecting');
 	    }
-	    if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
+	    if(!creep.memory.building && creep.carry.energy > creep.carryCapacity*0.5) {
 	        creep.memory.building = true;
 	        creep.say('building');
 	    }
@@ -19,6 +20,10 @@ var roleBuilder = {
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
+            }
+            else {
+
+              roleRepairer.run(creep);
             }
 	    }
 	    else {
@@ -33,7 +38,12 @@ var roleBuilder = {
                 if(!(creep.pos.isNearTo(target))){
                     creep.moveTo(target);
                 }else{
+                  if (target.energy <creep.carryCapacity){
+                    creep.withdraw(target, RESOURCE_ENERGY, target.energy);
+                  }
+                  else{
                     creep.withdraw(target, RESOURCE_ENERGY, (creep.carryCapacity - _.sum(creep.carry)));
+                  }
                 }
             }
 	    }

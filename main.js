@@ -2,6 +2,7 @@ require('prototype.spawn')();
 var roleHarvester=require('role.harvester')
 var roleUpgrader=require('role.upgrader')
 var roleBuilder=require('role.builder')
+var roleRepairer=require('role.repairer')
 module.exports.loop=function(){
   console.log('--------------Beginning of current tick--------------')
   for(var name in Memory.creeps){
@@ -24,9 +25,9 @@ module.exports.loop=function(){
     console.log('Room "'+name+'" has '+energy+' energy');
   }
   console.log('Number of creeps: '+numberOfCreeps);
-  var MaxNumCreeps=10;
+  var MaxNumCreeps=12;
   var minNumHarvesters=6;
-  var minNumUpgraders=2;
+  var minNumUpgraders=4;
   var minNumBuilders=2;
 
   var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
@@ -39,6 +40,9 @@ module.exports.loop=function(){
 
   var builders = _.filter(Game.creeps,(creep) => creep.memory.role == 'builder');
   console.log('Builders : '+ builders.length);
+
+  var repairers= _.filter(Game.creeps,(creep) => creep.memory.role == 'repairer');
+  console.log('Repairers : '+ repairers.length);
 
   if(numberOfCreeps < MaxNumCreeps){
     if (harvesters.length < minNumHarvesters) {
@@ -78,7 +82,7 @@ module.exports.loop=function(){
       //if(creep.memory.role == 'transporter') roleTransporter.run(creep);
       //if(creep.memory.role=='miner') roleMiner.run(creep);
       //if(creep.memory.role=='hauler') roleHauler.run(creep);
-      //if(creep.memory.role=='repairer')roleRepairer.run(creep);
+      if(creep.memory.role=='repairer')roleRepairer.run(creep);
     }
     console.log('-----------------End of current tick-----------------');
 }
