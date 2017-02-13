@@ -3,6 +3,8 @@ var roleHarvester=require('role.harvester')
 var roleUpgrader=require('role.upgrader')
 var roleBuilder=require('role.builder')
 var roleRepairer=require('role.repairer')
+var roleRefiller=require('role.refiller')
+var structureTower=require('structure.tower')
 module.exports.loop=function(){
   console.log('--------------Beginning of current tick--------------')
   for(var name in Memory.creeps){
@@ -25,10 +27,11 @@ module.exports.loop=function(){
     console.log('Room "'+name+'" has '+energy+' energy');
   }
   console.log('Number of creeps: '+numberOfCreeps);
-  var MaxNumCreeps=12;
+  var MaxNumCreeps=13;
   var minNumHarvesters=6;
   var minNumUpgraders=4;
   var minNumBuilders=2;
+  var minNumRefillers=1;
 
   var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
   console.log('Harvesters : ' + harvesters.length);
@@ -43,6 +46,9 @@ module.exports.loop=function(){
 
   var repairers= _.filter(Game.creeps,(creep) => creep.memory.role == 'repairer');
   console.log('Repairers : '+ repairers.length);
+
+  var refillers= _.filter(Game.creeps,(creep) => creep.memory.role == 'refiller');
+  console.log('Refillers : '+ refillers.length);
 
   if(numberOfCreeps < MaxNumCreeps){
     if (harvesters.length < minNumHarvesters) {
@@ -79,10 +85,25 @@ module.exports.loop=function(){
       if(creep.memory.role=='harvester') roleHarvester.run(creep);
       if(creep.memory.role=='upgrader') roleUpgrader.run(creep);
       if(creep.memory.role=='builder') roleBuilder.run(creep);
-      //if(creep.memory.role == 'transporter') roleTransporter.run(creep);
+      if(creep.memory.role == 'refiller') roleRefiller.run(creep);
       //if(creep.memory.role=='miner') roleMiner.run(creep);
       //if(creep.memory.role=='hauler') roleHauler.run(creep);
       if(creep.memory.role=='repairer')roleRepairer.run(creep);
     }
+    var tower = Game.getObjectById('aed3835e7f3987d');
+    if(tower) {
+         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+             filter: (structure) => structure.hits < structure.hitsMax
+         });
+         if(closestDamagedStructure) {
+             tower.repair(closestDamagedStructure);
+         }
+
+         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+         if(closestHostile) {
+             tower.attack(closestHostile);
+         }
+     }
+
     console.log('-----------------End of current tick-----------------');
 }

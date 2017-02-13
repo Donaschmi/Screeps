@@ -12,7 +12,7 @@ module.exports = function() {
         body.push(WORK);
       }
     }
-    if(roleName=='upgrader' || roleName=='builder' || roleName=='harvester' || roleName=='repairer'){
+    if(roleName=='upgrader' || roleName=='builder' || roleName=='harvester' || roleName=='repairer' || roleName=='refiller'){
       var numberOfParts=Math.floor(energy / 200);
       for(let i=0; i<numberOfParts; i++){
         body.push(WORK);

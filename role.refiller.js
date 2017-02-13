@@ -1,29 +1,30 @@
-roleRefiller=require('role.refiller')
-var roleRepairer={
+//roleBuilder=require('role.builder')
+var roleRefiller={
   /** @param {Creep} creep**/
   run:function(creep){
-    if(creep.memory.repairing && creep.energy == 0){
-      creep.memory.repairing=false;
+    if(creep.memory.refilling && creep.energy == 0){
+      creep.memory.refilling=false;
       creep.say('collecting');
     }
-    if(!creep.memory.repairing && creep.carry.energy > creep.carryCapacity*0.5){
-      creep.memory.repairing=true;
-      creep.say('repairing');
+    if(!creep.memory.refilling && creep.carry.energy >= creep.carryCapacity*0.5){
+      creep.memory.refilling=true;
+      creep.say('refilling');
     }
-    if(creep.memory.repairing){
+    if(creep.memory.refilling){
+      creep.memory.refilling=false;
       var targets =creep.room.find(FIND_STRUCTURES,
         {filter:function(structure){
-          return (structure.structureType==STRUCTURE_ROAD && structure.hits<structure.hitsMax*0.75)
+          return (structure.structureType==STRUCTURE_TOWER && structure.energy<structure.energyCapacity*0.75)
         }});
         if(targets.length){
           target =creep.pos.findClosestByRange(targets);
-          if(creep.repair(target)==ERR_NOT_IN_RANGE){
-            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
+          if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
           }
         }
         else{
-          //TODO Correct this scripts so that if a repairer doesn't have a job to to, he will become a builder
-          creep.memory.role='refiller'
+          //TODO Correct this script so that if a refiller doesn't have a job to to, he will become a builder
+          creep.memory.role='builder'
         }
       }
       else{
@@ -48,4 +49,4 @@ var roleRepairer={
       }
     }
   };
-  module.exports=roleRepairer;
+  module.exports=roleRefiller;

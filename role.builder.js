@@ -23,7 +23,7 @@ var roleBuilder = {
             }
             else {
 
-              roleRepairer.run(creep);
+              creep.memory.role='repairer'
             }
 	    }
 	    else {
